@@ -1,18 +1,23 @@
+#redis = Redis(host='redis-slave-2', port=6379)
+
 from flask import Flask, send_file , render_template_string
 from redis import Redis
 import os
 
 app = Flask(__name__)
-#redis = Redis(host='redis-slave-2', port=6381)
-redis = Redis(host='redis-master', port=6379)
+
+redis = Redis(host='', port=6379)
+
 
 @app.route('/')
 def hello():
     counter = str(redis.get('hits'), 'utf-8')
+    hostname = os.environ.get("HOSTNAME" , "N/A")
     return render_template_string("""
     <html>
     <body>
         <p>Questa pagina è stata vista {{ counter }} volte(s)</p>
+        <p>Container: {{ hostname }}</p>
         <form action="/add" method="POST">
             <button type="submit">Aggiungi visita</button>
         </form>
@@ -21,7 +26,7 @@ def hello():
         </form>
     </body>
     </html>
-    """, counter=counter)
+    """, counter=counter , hostname=hostname)
 
 @app.route('/add', methods=['POST'])
 def increment():

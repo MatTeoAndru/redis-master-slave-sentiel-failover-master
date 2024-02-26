@@ -5,6 +5,8 @@ services:
     image: redis
     ports:
       - "6379:6379"
+    networks:
+      - host
     command: "redis-server /etc/redis.conf"
     volumes:
       - "./data/master:/data/"
@@ -15,18 +17,22 @@ services:
     image: redis
     ports:
       - "6380:6379"
+    networks:
+      - host
     command: "redis-server /etc/redis.conf"
     volumes:
       - "./data/slave:/data/"
       - "./slave.conf:/etc/redis.conf"
     depends_on:
       - redis-master
-  
+
   redis-slave-2:
     container_name: "redis-slave-2"
     image: redis
     ports:
       - "6381:6379"
+    networks:
+      - host
     command: "redis-server /etc/redis.conf"
     volumes:
       - "./data/slave:/data/"
@@ -39,6 +45,8 @@ services:
     image: redis
     ports:
       - "26379:26379"
+    networks:
+      - host
     command: "redis-server /data/sentinel.conf --sentinel"
     volumes:
       - "./data/sentinel_conf:/data/"
@@ -51,6 +59,8 @@ services:
     image: redis
     ports:
       - "26380:26379"
+    networks:
+      - host
     command: "redis-server /data/sentinel.conf --sentinel"
     volumes:
       - "./data/sentinel_conf:/data/"
@@ -63,6 +73,8 @@ services:
     image: "oblakstudio/redisinsight:latest"
     ports:
       - "5540:5540"
+    networks:
+      - host
     depends_on:
       - redis-master
       - redis-slave
@@ -73,6 +85,8 @@ services:
     image: pythonredis
     ports:
       - "8000:8000"
+    networks:
+      - host
     volumes:
       - "./flask-app:/flask-app"
     depends_on:
@@ -80,14 +94,29 @@ services:
       - redis-slave
       - redis-slave-2
 
-  # redis-slave-3:
-  #   container_name: "redis-slave-3"
-  #   image: redis
-  #   ports:
-  #     - "6382:6379"
-  #   command: "redis-server /etc/redis.conf slaveof no one"
-  #   volumes:
-  #     - "./data/slave:/data/"
-  #     - "./slave.conf:/etc/redis.conf"
-  #   depends_on:
-  #     - redis-master
+  flask-app-2:
+    container_name: "flask-app-2"
+    image: pythonredis
+    ports:
+      - "8001:8000"
+    networks:
+      - host
+    volumes:
+      - "./flask-app:/flask-app"
+    depends_on:
+      - redis-master
+      - redis-slave
+      - redis-slave-2
+
+  proxy:
+    image: haproxy-redis
+    depends_on:
+      - redis-master
+    networks:
+      - host
+    ports:
+      - '8404:8404'
+      - '8080:80'
+
+networks:
+  host:
