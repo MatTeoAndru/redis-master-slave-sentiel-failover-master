@@ -1,0 +1,35 @@
+defaults
+  mode http
+  timeout client 10s
+  timeout connect 5s
+  timeout server 10s
+  timeout http-request 10s
+  log global
+
+frontend stats
+  bind *:8404
+  stats enable
+  stats uri /
+  stats refresh 10s
+
+frontend myfrontend
+  mode tcp
+  bind :80
+  default_backend webservers
+
+backend webservers
+  mode tcp
+  option tcp-check
+  tcp-check send PING\r\n
+  tcp-check expect string +PONG
+  tcp-check send info\ replication\r\n
+  tcp-check expect string role:master
+  tcp-check send QUIT\r\n
+  tcp-check expect string +OK
+  server redis_master_01 redis-master:6379 maxconn 1024 check inter 1s
+
+backend slaves
+  mode tcp
+  option tcp-check
+  server redis_slave_01 redis-slave:6379 maxconn 1024 check inter 1s
+  server redis_slave_02 redis-slave-2:6379 maxconn 1024 check inter 1s

@@ -1,7 +1,4 @@
 #redis = Redis(host='redis-slave-2', port=6379)
-# https://stackoverflow.com/questions/57714028/naming-current-redis-master-run-in-docker-in-python
-# https://stackoverflow.com/questions/76184653/flask-session-with-redis-sentinel-cluster-app-dies-on-new-redis-master/76731062#76731062
-# https://stackoverflow.com/questions/70913043/how-to-connect-k8s-redis-sentinel-flask-caching
 
 from flask import Flask, send_file , render_template_string
 from redis import Redis

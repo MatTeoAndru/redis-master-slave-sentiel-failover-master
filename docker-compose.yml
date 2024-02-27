@@ -84,7 +84,7 @@ services:
     container_name: "flask-app"
     image: pythonredis
     ports:
-      - "8000:8000"
+      - "5000:5000"
     networks:
       - host
     volumes:
@@ -98,7 +98,7 @@ services:
     container_name: "flask-app-2"
     image: pythonredis
     ports:
-      - "8001:8000"
+      - "5001:5000"
     networks:
       - host
     volumes:
@@ -109,14 +109,16 @@ services:
       - redis-slave-2
 
   proxy:
-    image: haproxy-redis
+    image: haproxy:latest
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
     depends_on:
       - redis-master
     networks:
       - host
     ports:
       - '8404:8404'
-      - '8080:80'
+      - '80:80'
 
 networks:
   host:
