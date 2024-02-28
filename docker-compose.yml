@@ -68,6 +68,48 @@ services:
       - redis-master
       - redis-slave
 
+  # redis-sentinel-3:
+  #   container_name: 'redis-sentinel-3'
+  #   image: redis
+  #   ports:
+  #     - "26381:26379"
+  #   networks:
+  #     - host
+  #   command: "redis-server /data/sentinel.conf --sentinel"
+  #   volumes:
+  #     - "./data/sentinel_conf:/data/"
+  #   depends_on:
+  #     - redis-master
+  #     - redis-slave
+
+  # redis-sentinel-4:
+  #   container_name: 'redis-sentinel-4'
+  #   image: redis:7.0-rc2
+  #   ports:
+  #     - "26382:26379"
+  #   networks:
+  #     - host
+  #   command: "redis-server /data/sentinel.conf --sentinel"
+  #   volumes:
+  #     - "./data/sentinel_conf:/data/"
+  #   depends_on:
+  #     - redis-master
+  #     - redis-slave
+
+  # redis-sentinel-5:
+  #   container_name: 'redis-sentinel-5'
+  #   image: redis:7.0-rc2
+  #   ports:
+  #     - "26383:26379"
+  #   networks:
+  #     - host
+  #   command: "redis-server /data/sentinel.conf --sentinel"
+  #   volumes:
+  #     - "./data/sentinel_conf:/data/"
+  #   depends_on:
+  #     - redis-master
+  #     - redis-slave
+
   redis-insight:
     container_name: "redis-insight"
     image: "oblakstudio/redisinsight:latest"
