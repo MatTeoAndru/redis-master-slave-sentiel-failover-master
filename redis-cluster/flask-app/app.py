@@ -13,7 +13,7 @@ import os
 #Importazione classe da sentinel.py
 from sentinel import SentinelManagedConnection
 import datetime
-import warnings
+import warnings 
 
 # https://stackoverflow.com/questions/76184653/flask-session-with-redis-sentinel-cluster-app-dies-on-new-redis-master/76731062#76731062
 # https://medium.com/@itaymelamed/building-a-python-scalable-flask-application-using-docker-compose-and-nginx-load-balancer-10b650e0a1b5
